@@ -44,7 +44,7 @@ const ManageUsersPage = () => {
       }
       
       console.log('manage-users: checkAuth - Checking admin status...');
-      const adminStatus = await isAdmin();
+      const adminStatus = await isAdmin(user);
       console.log('manage-users: checkAuth - Admin status:', adminStatus);
       
       if (!adminStatus) {

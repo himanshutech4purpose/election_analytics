@@ -42,7 +42,7 @@ const AddUserPage = () => {
       }
       
       console.log('add-user: checkAuth - Checking admin status...');
-      const adminStatus = await isAdmin();
+      const adminStatus = await isAdmin(user);
       console.log('add-user: checkAuth - Admin status:', adminStatus);
       
       if (!adminStatus) {

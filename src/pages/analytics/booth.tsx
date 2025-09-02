@@ -9,7 +9,7 @@ import {
 import Layout from '../../components/Layout';
 import { BoothLevelAnalytics, BoothAnalyticsData } from '../../types';
 import { supabase } from '../../lib/supabase';
-import { getCurrentUser } from '../../lib/auth';
+import { getCurrentUser, User } from '../../lib/auth';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const BoothAnalyticsPage = () => {
@@ -17,7 +17,7 @@ const BoothAnalyticsPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedBooth, setSelectedBooth] = useState<BoothLevelAnalytics | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];

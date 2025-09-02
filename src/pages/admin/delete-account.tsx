@@ -32,7 +32,7 @@ const DeleteAccountPage = () => {
       }
       
       console.log('delete-account: checkAuth - Checking admin status...');
-      const adminStatus = await isAdmin();
+      const adminStatus = await isAdmin(currentUser);
       console.log('delete-account: checkAuth - Admin status:', adminStatus);
       
       if (!adminStatus) {

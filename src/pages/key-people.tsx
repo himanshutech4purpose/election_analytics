@@ -12,7 +12,7 @@ import {
 import Layout from '../components/Layout';
 import { KeyPerson, SearchFilters } from '../types';
 import { supabase } from '../lib/supabase';
-import { getCurrentUser } from '../lib/auth';
+import { getCurrentUser, User } from '../lib/auth';
 
 const KeyPeoplePage = () => {
   const [keyPeople, setKeyPeople] = useState<KeyPerson[]>([]);
@@ -20,7 +20,7 @@ const KeyPeoplePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<SearchFilters>({});
   const [showAddForm, setShowAddForm] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {

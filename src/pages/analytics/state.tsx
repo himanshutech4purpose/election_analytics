@@ -9,7 +9,7 @@ import {
 import Layout from '../../components/Layout';
 import { StateLevelAnalytics, StateAnalyticsData } from '../../types';
 import { supabase } from '../../lib/supabase';
-import { getCurrentUser } from '../../lib/auth';
+import { getCurrentUser, User } from '../../lib/auth';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const StateAnalyticsPage = () => {
@@ -17,7 +17,7 @@ const StateAnalyticsPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedState, setSelectedState] = useState<StateLevelAnalytics | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FF6B6B', '#4ECDC4'];
@@ -123,7 +123,7 @@ const StateAnalyticsPage = () => {
     if (!state.json_data?.data) return null;
 
     const data = state.json_data.data;
-    const charts = [];
+    const charts: JSX.Element[] = [];
 
     data.forEach((item: any) => {
       if (item.caste && item.pie_chart) {

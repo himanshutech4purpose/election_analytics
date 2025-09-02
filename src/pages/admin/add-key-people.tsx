@@ -56,7 +56,7 @@ const AddKeyPeoplePage = () => {
       }
       
       console.log('add-key-people: checkAuth - Checking admin status...');
-      const adminStatus = await isAdmin();
+      const adminStatus = await isAdmin(user);
       console.log('add-key-people: checkAuth - Admin status:', adminStatus);
       
       if (!adminStatus) {

@@ -14,13 +14,13 @@ import Link from 'next/link';
 import Layout from '../../components/Layout';
 import { BoothLevelAnalytics, KeyPerson } from '../../types';
 import { supabase } from '../../lib/supabase';
-import { getCurrentUser } from '../../lib/auth';
+import { getCurrentUser, User } from '../../lib/auth';
 
 const BoothDashboardPage = () => {
   const [boothData, setBoothData] = useState<BoothLevelAnalytics[]>([]);
   const [keyPeople, setKeyPeople] = useState<KeyPerson[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -80,7 +80,13 @@ const BoothDashboardPage = () => {
   };
 
   const getRecentActivity = () => {
-    const activities = [];
+    const activities: Array<{
+      type: string;
+      message: string;
+      time: string;
+      icon: any;
+      color: string;
+    }> = [];
     
     // Add recent booth updates
     boothData.slice(0, 3).forEach(booth => {

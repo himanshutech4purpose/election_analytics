@@ -80,3 +80,75 @@ export const logout = async (): Promise<void> => {
   // For now, just return
   return;
 };
+
+// Register a new user
+export const registerUser = async (
+  email: string,
+  phone_number: string,
+  name: string,
+  role: 'admin' | 'manager'
+): Promise<{ success: boolean; error: string | null }> => {
+  try {
+    // For now, return success for testing purposes
+    // In production, this would create a user in the database
+    console.log('registerUser: Creating user with:', { email, phone_number, name, role });
+    
+    // Mock successful registration
+    return { success: true, error: null };
+  } catch (error) {
+    console.error('registerUser: Error creating user:', error);
+    return { success: false, error: 'Failed to create user' };
+  }
+};
+
+// Update user role
+export const updateUserRole = async (
+  userId: number,
+  newRole: 'admin' | 'manager'
+): Promise<{ success: boolean; error: string | null }> => {
+  try {
+    // For now, return success for testing purposes
+    // In production, this would update the user role in the database
+    console.log('updateUserRole: Updating user role:', { userId, newRole });
+    
+    // Mock successful update
+    return { success: true, error: null };
+  } catch (error) {
+    console.error('updateUserRole: Error updating user role:', error);
+    return { success: false, error: 'Failed to update user role' };
+  }
+};
+
+// Delete user
+export const deleteUser = async (
+  userId: number
+): Promise<{ success: boolean; error: string | null }> => {
+  try {
+    // For now, return success for testing purposes
+    // In production, this would delete the user from the database
+    console.log('deleteUser: Deleting user:', { userId });
+    
+    // Mock successful deletion
+    return { success: true, error: null };
+  } catch (error) {
+    console.error('deleteUser: Error deleting user:', error);
+    return { success: false, error: 'Failed to delete user' };
+  }
+};
+
+// Reset password
+export const resetPassword = async (
+  email: string
+): Promise<{ success: boolean; error: string | null }> => {
+  try {
+    // For now, return success for testing purposes
+    // In production, this would send a password reset email
+    console.log('resetPassword: Resetting password for:', { email });
+    
+    // Mock successful password reset
+    return { success: true, error: null };
+  } catch (error) {
+    console.error('resetPassword: Error resetting password:', error);
+    return { success: false, error: 'Failed to reset password' };
+  }
+};
