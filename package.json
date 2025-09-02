@@ -1,28 +1,35 @@
 {
   "name": "voter-intelligence-app",
   "version": "1.0.0",
-  "description": "A voter intelligence web application with user login functionality and admin management.",
+  "description": "A comprehensive voter intelligence web application with PWA capabilities, user management, and analytics dashboards.",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "export": "next export"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.39.0",
     "@types/node": "^20.10.5",
     "autoprefixer": "^10.4.16",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.5.0",
+    "date-fns": "^2.30.0",
+    "framer-motion": "^10.16.16",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.303.0",
-    "next": "^14.0.4",
+    "next": "^15.0.0",
+    "next-pwa": "^5.6.0",
     "postcss": "^8.4.32",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
     "react-hot-toast": "^2.6.0",
+    "recharts": "^2.8.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3",
     "uuid": "^9.0.1"
@@ -34,14 +41,17 @@
     "@types/react-dom": "^18.2.18",
     "@types/uuid": "^9.0.7",
     "eslint": "^8.56.0",
-    "eslint-config-next": "^14.0.4"
+    "eslint-config-next": "^15.0.0"
   },
   "keywords": [
     "voter",
     "intelligence",
     "web",
-    "application"
+    "application",
+    "pwa",
+    "analytics",
+    "dashboard"
   ],
-  "author": "Your Name",
+  "author": "Voter Intelligence Team",
   "license": "MIT"
 }

@@ -2,9 +2,10 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/login": "pages/login.js",
-  "/setup": "pages/setup.js",
   "/": "pages/index.js",
+  "/key-people": "pages/key-people.js",
   "/dashboard/booth": "pages/dashboard/booth.js",
-  "/api/fetch-dashboard-data": "pages/api/fetch-dashboard-data.js"
+  "/analytics/booth": "pages/analytics/booth.js",
+  "/analytics/district": "pages/analytics/district.js",
+  "/analytics/state": "pages/analytics/state.js"
 }

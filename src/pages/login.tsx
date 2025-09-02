@@ -1,100 +1,93 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import AuthForm from '../components/AuthForm';
-import { login, getCurrentUser, loginWithGoogle } from '../lib/auth';
+import { login, getCurrentUser } from '../lib/auth';
 import { Toaster, toast } from 'react-hot-toast';
 
-const LoginPage = () => {
-  console.log('login: LoginPage component rendered');
-  
+export default function LoginPage() {
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    console.log('login: useEffect triggered, checking authentication...');
-    // Check if user is already logged in
+    // Check if user is already authenticated
     const checkAuth = async () => {
       try {
-        console.log('login: checkAuth - Starting authentication check...');
-        const user = await getCurrentUser();
-        console.log('login: checkAuth - User result:', user);
-        
-        if (user) {
-          console.log('login: checkAuth - User found, redirecting to dashboard...');
-          router.push('/dashboard/booth');
-        } else {
-          console.log('login: checkAuth - No user found, staying on login page');
+        const currentUser = await getCurrentUser();
+        if (currentUser) {
+          // User is already logged in, redirect to dashboard
+          router.push('/');
         }
       } catch (error) {
-        console.error('login: checkAuth - Error occurred:', error);
+        // User is not authenticated, stay on login page
+        console.log('User not authenticated');
       }
     };
+
     checkAuth();
   }, [router]);
 
   const handleLogin = async (emailOrPhone: string, password: string) => {
-    console.log('login: handleLogin called with emailOrPhone:', emailOrPhone);
     setLoading(true);
-    
     try {
-      console.log('login: handleLogin - Calling login function...');
       const result = await login(emailOrPhone, password);
-      console.log('login: handleLogin - Login result:', { success: !result.error, error: result.error });
       
-      if (result.error) {
-        console.error('login: handleLogin - Login failed:', result.error);
-        toast.error(result.error);
-      } else if (result.user) {
-        console.log('login: handleLogin - Login successful, redirecting...');
+      if (result.user) {
         toast.success('Login successful!');
-        router.push('/dashboard/booth');
+        router.push('/');
+      } else {
+        toast.error(result.error || 'Login failed');
       }
-    } catch (err) {
-      console.error('login: handleLogin - Unexpected error:', err);
-      toast.error('An unexpected error occurred. Please try again.');
+    } catch (error) {
+      console.error('Login error:', error);
+      toast.error('An unexpected error occurred');
     } finally {
-      console.log('login: handleLogin - Setting loading to false');
       setLoading(false);
     }
   };
 
-  const handleGoogleLogin = async () => {
-    console.log('login: handleGoogleLogin called');
-    setGoogleLoading(true);
-    
-    try {
-      console.log('login: handleGoogleLogin - Calling loginWithGoogle function...');
-      const result = await loginWithGoogle();
-      console.log('login: handleGoogleLogin - Google login result:', { success: !result.error, error: result.error });
-      
-      if (result.error) {
-        console.error('login: handleGoogleLogin - Google login failed:', result.error);
-        toast.error(result.error);
-        setGoogleLoading(false);
-      } else {
-        console.log('login: handleGoogleLogin - Google login successful, redirecting to OAuth...');
-        // If successful, user will be redirected to Google OAuth
-      }
-    } catch (err) {
-      console.error('login: handleGoogleLogin - Unexpected error:', err);
-      toast.error('An unexpected error occurred. Please try again.');
-      setGoogleLoading(false);
-    }
-  };
-
-  console.log('login: Rendering with state:', { loading, googleLoading });
   return (
-    <>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <Toaster position="top-right" />
-      <AuthForm 
-        onSubmit={handleLogin} 
-        onGoogleLogin={handleGoogleLogin}
-        mode="login" 
-        loading={loading || googleLoading} 
-      />
-    </>
-  );
-};
+      
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Voter Intelligence
+          </h1>
+          <p className="text-lg text-gray-600">
+            Sign in to your account
+          </p>
+        </div>
+      </div>
 
-export default LoginPage;
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <AuthForm 
+            onSubmit={handleLogin}
+            loading={loading}
+            mode="login"
+          />
+          
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">
+                  Need help?
+                </span>
+              </div>
+            </div>
+            
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600">
+                Contact your administrator for access credentials
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

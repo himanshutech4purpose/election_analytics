@@ -37,7 +37,7 @@ export interface BoothAnalyticsData {
   caste?: {
     [key: string]: number;
   };
-  age?: {
+  age_group?: {
     [key: string]: number;
   };
   gender?: {
@@ -50,6 +50,54 @@ export interface BoothAnalyticsData {
     [key: string]: number;
   };
   [key: string]: any;
+}
+
+export interface StateLevelAnalytics {
+  id: number;
+  created_at: string;
+  state_name: string;
+  json_data?: StateAnalyticsData;
+}
+
+export interface StateAnalyticsData {
+  data: Array<{
+    caste?: { [key: string]: number };
+    religion?: { [key: string]: number };
+    age_group?: { [key: string]: number };
+    gender?: { [key: string]: number };
+    education?: { [key: string]: number };
+    occupation?: { [key: string]: number };
+    migration?: { [key: string]: number };
+    poverty_level?: { [key: string]: number };
+    amenities?: { [key: string]: number };
+    political_preference?: { [key: string]: number };
+    pie_chart?: boolean;
+    bar_chart?: boolean;
+  }>;
+}
+
+export interface DistrictLevelAnalytics {
+  id: number;
+  created_at: string;
+  district_name: string;
+  json_data?: DistrictAnalyticsData;
+}
+
+export interface DistrictAnalyticsData {
+  data: Array<{
+    caste?: { [key: string]: number };
+    religion?: { [key: string]: number };
+    age_group?: { [key: string]: number };
+    gender?: { [key: string]: number };
+    education?: { [key: string]: number };
+    occupation?: { [key: string]: number };
+    migration?: { [key: string]: number };
+    poverty_level?: { [key: string]: number };
+    amenities?: { [key: string]: number };
+    political_preference?: { [key: string]: number };
+    pie_chart?: boolean;
+    bar_chart?: boolean;
+  }>;
 }
 
 export interface AuthResponse {
@@ -88,4 +136,29 @@ export interface AddUserFormData {
   email: string;
   phone_number: string;
   role: 'admin' | 'manager';
+}
+
+export interface SearchFilters {
+  searchTerm?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  createdBy?: string;
+}
+
+export interface ChartData {
+  labels: string[];
+  datasets: Array<{
+    label: string;
+    data: number[];
+    backgroundColor?: string[];
+    borderColor?: string[];
+    borderWidth?: number;
+  }>;
+}
+
+export interface NavigationItem {
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  current?: boolean;
 }
