@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { 
   ChartBarIcon, 
@@ -10,40 +11,20 @@ import {
   UserIcon,
   CogIcon
 } from '@heroicons/react/24/outline';
-import { getCurrentUser } from '../lib/auth';
 import Layout from '../components/Layout';
-import { User } from '../types';
 
 export default function HomePage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const currentUser = await getCurrentUser();
-        if (currentUser) {
-          setUser(currentUser);
-        } else {
-          // No user found, redirect to login
-          router.push('/login');
-          return;
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        router.push('/login');
-        return;
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [router]);
+    if (status === 'unauthenticated') {
+      router.push('/login');
+    }
+  }, [status, router]);
 
   // Show loading spinner while checking auth
-  if (loading) {
+  if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
@@ -51,8 +32,8 @@ export default function HomePage() {
     );
   }
 
-  // If no user after loading, don't render anything (will redirect)
-  if (!user) {
+  // If not authenticated, don't render anything (will redirect)
+  if (status === 'unauthenticated' || !session) {
     return null;
   }
 
@@ -125,14 +106,14 @@ export default function HomePage() {
           <div className="mt-4 flex items-center justify-center space-x-2">
             <span className="text-sm text-gray-500">Logged in as:</span>
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-              {user.name || user.email}
+              {session.user.name || session.user.email}
             </span>
             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-              user.role === 'admin' 
+              session.user.role === 'admin' 
                 ? 'bg-red-100 text-red-800' 
                 : 'bg-green-100 text-green-800'
             }`}>
-              {user.role}
+              {session.user.role || 'User'}
             </span>
           </div>
         </div>
@@ -184,7 +165,7 @@ export default function HomePage() {
         </div>
 
         {/* Admin Section */}
-        {user.role === 'admin' && (
+        {session.user.role === 'admin' && (
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Administration</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 import AuthForm from '../components/AuthForm';
 import { login, getCurrentUser } from '../lib/auth';
 import { Toaster, toast } from 'react-hot-toast';
@@ -7,24 +8,28 @@ import { Toaster, toast } from 'react-hot-toast';
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    // Check if user is already authenticated
-    const checkAuth = async () => {
-      try {
-        const currentUser = await getCurrentUser();
-        if (currentUser) {
-          // User is already logged in, redirect to dashboard
-          router.push('/');
-        }
-      } catch (error) {
-        // User is not authenticated, stay on login page
-        console.log('User not authenticated');
-      }
-    };
+    // Check if user is already authenticated via NextAuth
+    if (status === 'authenticated' && session) {
+      router.push('/dashboard/booth');
+    }
+  }, [session, status, router]);
 
-    checkAuth();
-  }, [router]);
+  // Show loading while checking authentication
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Don't render login form if already authenticated
+  if (status === 'authenticated') {
+    return null;
+  }
 
   const handleLogin = async (emailOrPhone: string, password: string) => {
     setLoading(true);
@@ -33,7 +38,9 @@ export default function LoginPage() {
       
       if (result.user) {
         toast.success('Login successful!');
-        router.push('/');
+        // For traditional login, we need to create a session manually
+        // This is a simplified approach - in production you'd want proper session management
+        router.push('/dashboard/booth');
       } else {
         toast.error(result.error || 'Login failed');
       }

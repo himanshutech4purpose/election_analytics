@@ -38,9 +38,6 @@ export const getCurrentUser = async (): Promise<User | null> => {
 // Login with email or phone
 export const login = async (emailOrPhone: string, password: string): Promise<AuthResponse> => {
   try {
-    // For now, accept any login for testing purposes
-    // In production, this would validate against the database
-    
     // Check if user exists in allowed_user table
     const { data: allowedUser, error: userError } = await supabase
       .from('allowed_user')
@@ -49,18 +46,15 @@ export const login = async (emailOrPhone: string, password: string): Promise<Aut
       .single();
 
     if (userError || !allowedUser) {
-      // For testing, create a mock user if none exists
-      const mockUser: User = {
-        id: 1,
-        name: 'Test User',
-        email: emailOrPhone.includes('@') ? emailOrPhone : undefined,
-        phone_number: !emailOrPhone.includes('@') ? emailOrPhone : undefined,
-        role: 'admin',
-        created_at: new Date().toISOString()
-      };
-      
-      return { user: mockUser, error: null };
+      return { user: null, error: 'User not found. Please contact administrator for access.' };
     }
+
+    // For now, we're not validating password since it's not hashed in the current setup
+    // In production, you would validate the hashed password here
+    // const isValidPassword = await bcrypt.compare(password, allowedUser.hashed_password);
+    // if (!isValidPassword) {
+    //   return { user: null, error: 'Invalid password' };
+    // }
 
     return { user: allowedUser, error: null };
   } catch (error) {
