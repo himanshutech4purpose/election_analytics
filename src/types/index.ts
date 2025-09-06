@@ -34,22 +34,15 @@ export interface BoothLevelAnalytics {
 }
 
 export interface BoothAnalyticsData {
-  caste?: {
-    [key: string]: number;
-  };
-  age_group?: {
-    [key: string]: number;
-  };
-  gender?: {
-    [key: string]: number;
-  };
-  education?: {
-    [key: string]: number;
-  };
-  occupation?: {
-    [key: string]: number;
-  };
-  [key: string]: any;
+  data: Array<{
+    caste?: { [key: string]: number };
+    age_group?: { [key: string]: number };
+    gender?: { [key: string]: number };
+    education?: { [key: string]: number };
+    occupation?: { [key: string]: number };
+    pie_chart?: boolean;
+    bar_chart?: boolean;
+  }>;
 }
 
 export interface StateLevelAnalytics {
@@ -143,6 +136,14 @@ export interface SearchFilters {
   dateFrom?: string;
   dateTo?: string;
   createdBy?: string;
+  name?: string;
+  phone_number?: string;
+  persona?: string;
+  instagram_id?: string;
+  facebook_id?: string;
+  twitter_id?: string;
+  other_social_media_id?: string;
+  notes?: string;
 }
 
 export interface ChartData {

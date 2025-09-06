@@ -70,9 +70,13 @@ const BoothDashboardPage = () => {
   const getTotalPopulation = () => {
     let total = 0;
     boothData.forEach(booth => {
-      if (booth.json_data?.caste) {
-        Object.values(booth.json_data.caste).forEach((value: any) => {
-          total += value;
+      if (booth.json_data?.data) {
+        booth.json_data.data.forEach((item: any) => {
+          if (item.caste) {
+            Object.values(item.caste).forEach((value: any) => {
+              total += value;
+            });
+          }
         });
       }
     });
@@ -272,9 +276,14 @@ const BoothDashboardPage = () => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {boothData.slice(0, 5).map((booth) => {
-                      const population = booth.json_data?.caste 
-                        ? Object.values(booth.json_data.caste).reduce((sum: number, val: any) => sum + val, 0)
-                        : 0;
+                      let population = 0;
+                      if (booth.json_data?.data) {
+                        booth.json_data.data.forEach((item: any) => {
+                          if (item.caste) {
+                            population += Object.values(item.caste).reduce((sum: number, val: any) => sum + val, 0);
+                          }
+                        });
+                      }
                       
                       return (
                         <tr key={booth.id} className="hover:bg-gray-50">

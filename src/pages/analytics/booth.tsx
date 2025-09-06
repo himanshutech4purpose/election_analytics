@@ -130,37 +130,51 @@ const BoothAnalyticsPage = () => {
   };
 
   const renderAnalyticsCharts = (booth: BoothLevelAnalytics) => {
-    if (!booth.json_data) return null;
+    if (!booth.json_data?.data) return null;
 
-    const data = booth.json_data;
-    const charts = [];
+    const data = booth.json_data.data;
+    const charts: JSX.Element[] = [];
 
-    // Caste distribution
-    if (data.caste) {
-      charts.push(renderPieChart(data.caste, 'Caste Distribution'));
-    }
-
-    // Age group distribution
-    if (data.age_group) {
-      charts.push(renderBarChart(data.age_group, 'Age Group Distribution'));
-    }
-
-    // Gender distribution
-    if (data.gender) {
-      charts.push(renderPieChart(data.gender, 'Gender Distribution'));
-    }
-
-    // Education distribution
-    if (data.education) {
-      charts.push(renderBarChart(data.education, 'Education Level Distribution'));
-    }
-
-    // Occupation distribution
-    if (data.occupation) {
-      charts.push(renderBarChart(data.occupation, 'Occupation Distribution'));
-    }
+    data.forEach((item: any) => {
+      if (item.caste && item.pie_chart) {
+        charts.push(renderPieChart(item.caste, 'Caste Distribution'));
+      }
+      if (item.gender && item.pie_chart) {
+        charts.push(renderPieChart(item.gender, 'Gender Distribution'));
+      }
+      if (item.age_group && item.bar_chart) {
+        charts.push(renderBarChart(item.age_group, 'Age Group Distribution'));
+      }
+      if (item.education && item.bar_chart) {
+        charts.push(renderBarChart(item.education, 'Education Level Distribution'));
+      }
+      if (item.occupation && item.pie_chart) {
+        charts.push(renderPieChart(item.occupation, 'Occupation Distribution'));
+      }
+    });
 
     return charts;
+  };
+
+  const getBoothSummary = (booth: BoothLevelAnalytics) => {
+    if (!booth.json_data?.data) return null;
+
+    const data = booth.json_data.data;
+    let totalPopulation = 0;
+    let casteData = null;
+    let genderData = null;
+
+    data.forEach((item: any) => {
+      if (item.caste) {
+        casteData = item.caste;
+        totalPopulation = Object.values(item.caste).reduce((sum: number, val: any) => sum + val, 0);
+      }
+      if (item.gender) {
+        genderData = item.gender;
+      }
+    });
+
+    return { totalPopulation, casteData, genderData };
   };
 
   if (!user) return null;
@@ -259,7 +273,7 @@ const BoothAnalyticsPage = () => {
             <div className="lg:col-span-3">
               {selectedBooth ? (
                 <div className="space-y-6">
-                  {/* Booth Info */}
+                  {/* Booth Info and Summary */}
                   <div className="bg-white rounded-lg shadow p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h2 className="text-xl font-bold text-gray-900">
@@ -270,7 +284,33 @@ const BoothAnalyticsPage = () => {
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    {(() => {
+                      const summary = getBoothSummary(selectedBooth);
+                      if (!summary) return null;
+
+                      return (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                          <div className="text-center p-3 bg-blue-50 rounded-lg">
+                            <p className="text-xs font-medium text-blue-600 uppercase">Total Population</p>
+                            <p className="text-lg font-bold text-blue-900">{summary.totalPopulation.toLocaleString()}</p>
+                          </div>
+                          <div className="text-center p-3 bg-green-50 rounded-lg">
+                            <p className="text-xs font-medium text-green-600 uppercase">Caste Categories</p>
+                            <p className="text-lg font-bold text-green-900">
+                              {summary.casteData ? Object.keys(summary.casteData).length : 0}
+                            </p>
+                          </div>
+                          <div className="text-center p-3 bg-purple-50 rounded-lg">
+                            <p className="text-xs font-medium text-purple-600 uppercase">Gender Categories</p>
+                            <p className="text-lg font-bold text-purple-900">
+                              {summary.genderData ? Object.keys(summary.genderData).length : 0}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {selectedBooth.panchayat_name && (
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
                           <p className="text-xs font-medium text-gray-500 uppercase">Panchayat</p>
@@ -283,12 +323,6 @@ const BoothAnalyticsPage = () => {
                           <p className="text-sm font-semibold text-gray-900">{selectedBooth.Main_Town}</p>
                         </div>
                       )}
-                      <div className="text-center p-3 bg-gray-50 rounded-lg">
-                        <p className="text-xs font-medium text-gray-500 uppercase">Data Points</p>
-                        <p className="text-sm font-semibold text-gray-900">
-                          {selectedBooth.json_data ? Object.keys(selectedBooth.json_data).length : 0}
-                        </p>
-                      </div>
                     </div>
                   </div>
 

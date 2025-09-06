@@ -46,10 +46,45 @@ const KeyPeoplePage = () => {
         .select('*')
         .order('created_at', { ascending: false });
 
+      // General search across multiple fields
       if (searchTerm) {
-        query = query.or(`name.ilike.%${searchTerm}%,phone_number.ilike.%${searchTerm}%,notes.ilike.%${searchTerm}%`);
+        query = query.or(`name.ilike.%${searchTerm}%,phone_number.ilike.%${searchTerm}%,notes.ilike.%${searchTerm}%,persona.ilike.%${searchTerm}%,instagram_id.ilike.%${searchTerm}%,facebook_id.ilike.%${searchTerm}%,twitter_id.ilike.%${searchTerm}%,other_social_media_id.ilike.%${searchTerm}%`);
       }
 
+      // Column-specific filters
+      if (filters.name) {
+        query = query.ilike('name', `%${filters.name}%`);
+      }
+
+      if (filters.phone_number) {
+        query = query.ilike('phone_number', `%${filters.phone_number}%`);
+      }
+
+      if (filters.persona) {
+        query = query.ilike('persona', `%${filters.persona}%`);
+      }
+
+      if (filters.instagram_id) {
+        query = query.ilike('instagram_id', `%${filters.instagram_id}%`);
+      }
+
+      if (filters.facebook_id) {
+        query = query.ilike('facebook_id', `%${filters.facebook_id}%`);
+      }
+
+      if (filters.twitter_id) {
+        query = query.ilike('twitter_id', `%${filters.twitter_id}%`);
+      }
+
+      if (filters.other_social_media_id) {
+        query = query.ilike('other_social_media_id', `%${filters.other_social_media_id}%`);
+      }
+
+      if (filters.notes) {
+        query = query.ilike('notes', `%${filters.notes}%`);
+      }
+
+      // Date filters
       if (filters.dateFrom) {
         query = query.gte('created_at', filters.dateFrom);
       }
@@ -59,7 +94,7 @@ const KeyPeoplePage = () => {
       }
 
       if (filters.createdBy) {
-        query = query.eq('created_by', filters.createdBy);
+        query = query.ilike('created_by', `%${filters.createdBy}%`);
       }
 
       const { data, error } = await query;
@@ -121,27 +156,133 @@ const KeyPeoplePage = () => {
           </button>
         </div>
 
-        {/* Search and Filters */}
+        {/* Advanced Search and Filters */}
         <div className="bg-white rounded-lg shadow p-6">
-          <form onSubmit={handleSearch} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
-                  Search
-                </label>
-                <div className="relative">
+          <form onSubmit={handleSearch} className="space-y-6">
+            {/* General Search */}
+            <div>
+              <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
+                General Search
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  id="search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search across all fields..."
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+              </div>
+            </div>
+
+            {/* Column-specific Filters */}
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 mb-3">Column-specific Filters</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label htmlFor="nameFilter" className="block text-xs font-medium text-gray-600 mb-1">
+                    Name
+                  </label>
                   <input
                     type="text"
-                    id="search"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search by name, phone, or notes..."
-                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    id="nameFilter"
+                    value={filters.name || ''}
+                    onChange={(e) => setFilters({ ...filters, name: e.target.value })}
+                    placeholder="e.g., hima, iman..."
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                   />
-                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                </div>
+
+                <div>
+                  <label htmlFor="phoneFilter" className="block text-xs font-medium text-gray-600 mb-1">
+                    Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    id="phoneFilter"
+                    value={filters.phone_number || ''}
+                    onChange={(e) => setFilters({ ...filters, phone_number: e.target.value })}
+                    placeholder="e.g., 987, +91..."
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="personaFilter" className="block text-xs font-medium text-gray-600 mb-1">
+                    Persona
+                  </label>
+                  <input
+                    type="text"
+                    id="personaFilter"
+                    value={filters.persona || ''}
+                    onChange={(e) => setFilters({ ...filters, persona: e.target.value })}
+                    placeholder="e.g., leader, worker..."
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="instagramFilter" className="block text-xs font-medium text-gray-600 mb-1">
+                    Instagram ID
+                  </label>
+                  <input
+                    type="text"
+                    id="instagramFilter"
+                    value={filters.instagram_id || ''}
+                    onChange={(e) => setFilters({ ...filters, instagram_id: e.target.value })}
+                    placeholder="e.g., @username..."
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="facebookFilter" className="block text-xs font-medium text-gray-600 mb-1">
+                    Facebook ID
+                  </label>
+                  <input
+                    type="text"
+                    id="facebookFilter"
+                    value={filters.facebook_id || ''}
+                    onChange={(e) => setFilters({ ...filters, facebook_id: e.target.value })}
+                    placeholder="e.g., facebook.com/..."
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="twitterFilter" className="block text-xs font-medium text-gray-600 mb-1">
+                    Twitter ID
+                  </label>
+                  <input
+                    type="text"
+                    id="twitterFilter"
+                    value={filters.twitter_id || ''}
+                    onChange={(e) => setFilters({ ...filters, twitter_id: e.target.value })}
+                    placeholder="e.g., @username..."
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="notesFilter" className="block text-xs font-medium text-gray-600 mb-1">
+                    Notes
+                  </label>
+                  <input
+                    type="text"
+                    id="notesFilter"
+                    value={filters.notes || ''}
+                    onChange={(e) => setFilters({ ...filters, notes: e.target.value })}
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Search in notes..."
+                  />
                 </div>
               </div>
+            </div>
 
+            {/* Date and Creator Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label htmlFor="dateFrom" className="block text-sm font-medium text-gray-700 mb-1">
                   From Date
@@ -164,7 +305,7 @@ const KeyPeoplePage = () => {
                   id="dateTo"
                   value={filters.dateTo || ''}
                   onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
-                  className="block w-full px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-1 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
@@ -372,6 +513,8 @@ const AddKeyPersonModal = ({ onClose, onSuccess, currentUser }: any) => {
     persona: ''
   });
   const [loading, setLoading] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(false);
+  const [locationError, setLocationError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -394,65 +537,235 @@ const AddKeyPersonModal = ({ onClose, onSuccess, currentUser }: any) => {
     }
   };
 
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation is not supported by this browser.');
+      return;
+    }
+
+    setLocationLoading(true);
+    setLocationError('');
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setFormData({
+          ...formData,
+          latitude: latitude.toString(),
+          longitude: longitude.toString(),
+          geolocation_url: `https://www.google.com/maps?q=${latitude},${longitude}`
+        });
+        setLocationLoading(false);
+      },
+      (error) => {
+        setLocationError(`Error getting location: ${error.message}`);
+        setLocationLoading(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    );
+  };
+
+  const openGoogleMaps = () => {
+    if (formData.latitude && formData.longitude) {
+      window.open(`https://www.google.com/maps?q=${formData.latitude},${formData.longitude}`, '_blank');
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+      <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
         <div className="mt-3">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Add New Key Person</h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-xl font-medium text-gray-900">Add New Key Person</h3>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Basic Information */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Enter full name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <input
+                  type="tel"
+                  value={formData.phone_number}
+                  onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="+91 9876543210"
+                />
+              </div>
+            </div>
+
             <div>
-              <label className="block text-sm font-medium text-gray-700">Name *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Persona</label>
               <input
                 type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                value={formData.persona}
+                onChange={(e) => setFormData({ ...formData, persona: e.target.value })}
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="e.g., Community Leader, Booth Worker, Influencer"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-              <input
-                type="tel"
-                value={formData.phone_number}
-                onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Notes</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
               <textarea
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                 rows={3}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Additional notes about this person..."
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Longitude</label>
-                <input
-                  type="text"
-                  value={formData.longitude}
-                  onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Latitude</label>
-                <input
-                  type="text"
-                  value={formData.latitude}
-                  onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
+            {/* Social Media */}
+            <div>
+              <h4 className="text-sm font-medium text-gray-700 mb-3">Social Media</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Instagram ID</label>
+                  <input
+                    type="text"
+                    value={formData.instagram_id}
+                    onChange={(e) => setFormData({ ...formData, instagram_id: e.target.value })}
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="@username or URL"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Facebook ID</label>
+                  <input
+                    type="text"
+                    value={formData.facebook_id}
+                    onChange={(e) => setFormData({ ...formData, facebook_id: e.target.value })}
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="facebook.com/username or URL"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Twitter ID</label>
+                  <input
+                    type="text"
+                    value={formData.twitter_id}
+                    onChange={(e) => setFormData({ ...formData, twitter_id: e.target.value })}
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="@username or URL"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Other Social Media</label>
+                  <input
+                    type="text"
+                    value={formData.other_social_media_id}
+                    onChange={(e) => setFormData({ ...formData, other_social_media_id: e.target.value })}
+                    className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="LinkedIn, YouTube, etc."
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="flex justify-end space-x-3 pt-4">
+            {/* Location */}
+            <div>
+              <h4 className="text-sm font-medium text-gray-700 mb-3">Location</h4>
+              <div className="space-y-3">
+                <div className="flex space-x-2">
+                  <button
+                    type="button"
+                    onClick={getCurrentLocation}
+                    disabled={locationLoading}
+                    className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                  >
+                    {locationLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
+                        Getting Location...
+                      </>
+                    ) : (
+                      <>
+                        <MapPinIcon className="h-4 w-4 mr-2" />
+                        Use Current Location
+                      </>
+                    )}
+                  </button>
+                  
+                  {formData.latitude && formData.longitude && (
+                    <button
+                      type="button"
+                      onClick={openGoogleMaps}
+                      className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      <MapPinIcon className="h-4 w-4 mr-2" />
+                      View on Map
+                    </button>
+                  )}
+                </div>
+
+                {locationError && (
+                  <p className="text-sm text-red-600">{locationError}</p>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Latitude</label>
+                    <input
+                      type="text"
+                      value={formData.latitude}
+                      onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
+                      className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="28.6139"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Longitude</label>
+                    <input
+                      type="text"
+                      value={formData.longitude}
+                      onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
+                      className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="77.2090"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">Google Maps URL</label>
+                    <input
+                      type="url"
+                      value={formData.geolocation_url}
+                      onChange={(e) => setFormData({ ...formData, geolocation_url: e.target.value })}
+                      className="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="https://maps.google.com/..."
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
               <button
                 type="button"
                 onClick={onClose}
@@ -465,7 +778,7 @@ const AddKeyPersonModal = ({ onClose, onSuccess, currentUser }: any) => {
                 disabled={loading}
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
               >
-                {loading ? 'Adding...' : 'Add Person'}
+                {loading ? 'Adding...' : 'Add Key Person'}
               </button>
             </div>
           </form>
