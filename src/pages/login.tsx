@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 import AuthForm from '../components/AuthForm';
-import { login, getCurrentUser } from '../lib/auth';
 import { Toaster, toast } from 'react-hot-toast';
 
 export default function LoginPage() {
@@ -34,15 +33,17 @@ export default function LoginPage() {
   const handleLogin = async (emailOrPhone: string, password: string) => {
     setLoading(true);
     try {
-      const result = await login(emailOrPhone, password);
-      
-      if (result.user) {
+      const result = await signIn('credentials', {
+        emailOrPhone,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        toast.error('Invalid credentials. Please check your email/phone and password.');
+      } else if (result?.ok) {
         toast.success('Login successful!');
-        // For traditional login, we need to create a session manually
-        // This is a simplified approach - in production you'd want proper session management
         router.push('/dashboard/booth');
-      } else {
-        toast.error(result.error || 'Login failed');
       }
     } catch (error) {
       console.error('Login error:', error);

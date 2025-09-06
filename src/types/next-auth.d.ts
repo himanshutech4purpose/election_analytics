@@ -27,5 +27,6 @@ declare module 'next-auth/jwt' {
     userId?: string;
     email?: string;
     name?: string;
+    role?: string;
   }
 }

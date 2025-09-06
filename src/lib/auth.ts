@@ -44,6 +44,7 @@ export const login = async (emailOrPhone: string, password: string): Promise<Aut
       .select('*')
       .or(`email.eq.${emailOrPhone},phone_number.eq.${emailOrPhone}`)
       .single();
+      console.log('allowedUser', allowedUser);
 
     if (userError || !allowedUser) {
       return { user: null, error: 'User not found. Please contact administrator for access.' };

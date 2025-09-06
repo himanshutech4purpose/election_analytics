@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { 
   ChartBarIcon, 
@@ -13,8 +14,6 @@ import {
   BuildingOfficeIcon,
   GlobeAltIcon
 } from '@heroicons/react/24/outline';
-import { getCurrentUser } from '../lib/auth';
-import { User } from '../types';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -36,46 +35,19 @@ const adminNavigation = [
 
 export default function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
   const router = useRouter();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const currentUser = await getCurrentUser();
-        if (currentUser) {
-          setUser(currentUser);
-        } else {
-          // No user found, redirect to login
-          router.push('/login');
-          return;
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        router.push('/login');
-        return;
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [router]);
 
   const handleLogout = async () => {
     try {
-      // Clear user state
-      setUser(null);
-      // Redirect to login
-      router.push('/login');
+      await signOut({ callbackUrl: '/login' });
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
 
   // Show loading spinner while checking auth
-  if (loading) {
+  if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
@@ -83,12 +55,12 @@ export default function Layout({ children }: LayoutProps) {
     );
   }
 
-  // If no user after loading, don't render anything (will redirect)
-  if (!user) {
+  // If not authenticated, don't render anything (middleware will redirect)
+  if (status === 'unauthenticated' || !session) {
     return null;
   }
 
-  const allNavigation = user.role === 'admin' 
+  const allNavigation = session.user.role === 'admin' 
     ? [...navigation, ...adminNavigation]
     : navigation;
 
@@ -182,13 +154,13 @@ export default function Layout({ children }: LayoutProps) {
             <div className="flex flex-1"></div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
               <div className="flex items-center gap-x-2">
-                <span className="text-sm text-gray-700">{user.name || user.email}</span>
+                <span className="text-sm text-gray-700">{session.user.name || session.user.email}</span>
                 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                  user.role === 'admin' 
+                  session.user.role === 'admin' 
                     ? 'bg-red-100 text-red-800' 
                     : 'bg-blue-100 text-blue-800'
                 }`}>
-                  {user.role}
+                  {session.user.role || 'User'}
                 </span>
               </div>
               <button
