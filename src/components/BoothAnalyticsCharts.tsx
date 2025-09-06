@@ -28,7 +28,7 @@ interface BoothAnalyticsChartsProps {
 }
 
 const BoothAnalyticsCharts: React.FC<BoothAnalyticsChartsProps> = ({ data, boothNumber }) => {
-  console.log('BoothAnalyticsCharts: Component rendered with props:', { boothNumber, dataKeys: Object.keys(data) });
+  console.log('BoothAnalyticsCharts: Component rendered with props:', { boothNumber, dataKeys: data ? Object.keys(data) : null });
   
   const chartOptions = {
     responsive: true,
@@ -39,15 +39,15 @@ const BoothAnalyticsCharts: React.FC<BoothAnalyticsChartsProps> = ({ data, booth
     },
   };
 
-  const createChartData = (data: any, label: string) => {
-    console.log('BoothAnalyticsCharts: createChartData called with:', { label, dataKeys: data ? Object.keys(data) : null });
-    if (!data) {
+  const createChartData = (chartData: any, label: string) => {
+    console.log('BoothAnalyticsCharts: createChartData called with:', { label, dataKeys: chartData ? Object.keys(chartData) : null });
+    if (!chartData) {
       console.log('BoothAnalyticsCharts: createChartData - no data provided, returning null');
       return null;
     }
     
-    const labels = Object.keys(data);
-    const values = Object.values(data);
+    const labels = Object.keys(chartData);
+    const values = Object.values(chartData);
     console.log('BoothAnalyticsCharts: createChartData - created chart data:', { labels, values });
     
     return {
@@ -74,14 +74,22 @@ const BoothAnalyticsCharts: React.FC<BoothAnalyticsChartsProps> = ({ data, booth
     };
   };
 
+  // Helper function to find data by type from the nested structure
+  const findDataByType = (type: string) => {
+    if (!data?.data) return null;
+    const item = data.data.find((item: any) => item[type as keyof typeof item]);
+    return item ? item[type as keyof typeof item] : null;
+  };
+
   const renderCasteChart = () => {
-    console.log('BoothAnalyticsCharts: renderCasteChart called, data.caste:', data.caste);
-    if (!data.caste) {
+    const casteData = findDataByType('caste');
+    console.log('BoothAnalyticsCharts: renderCasteChart called, casteData:', casteData);
+    if (!casteData) {
       console.log('BoothAnalyticsCharts: renderCasteChart - no caste data, returning null');
       return null;
     }
     
-    const chartData = createChartData(data.caste, 'Caste Distribution');
+    const chartData = createChartData(casteData, 'Caste Distribution');
     if (!chartData) {
       console.log('BoothAnalyticsCharts: renderCasteChart - no chart data created, returning null');
       return null;
@@ -99,13 +107,14 @@ const BoothAnalyticsCharts: React.FC<BoothAnalyticsChartsProps> = ({ data, booth
   };
 
   const renderAgeChart = () => {
-    console.log('BoothAnalyticsCharts: renderAgeChart called, data.age:', data.age);
-    if (!data.age) {
+    const ageData = findDataByType('age_group');
+    console.log('BoothAnalyticsCharts: renderAgeChart called, ageData:', ageData);
+    if (!ageData) {
       console.log('BoothAnalyticsCharts: renderAgeChart - no age data, returning null');
       return null;
     }
     
-    const chartData = createChartData(data.age, 'Age Distribution');
+    const chartData = createChartData(ageData, 'Age Distribution');
     if (!chartData) {
       console.log('BoothAnalyticsCharts: renderAgeChart - no chart data created, returning null');
       return null;
@@ -123,13 +132,14 @@ const BoothAnalyticsCharts: React.FC<BoothAnalyticsChartsProps> = ({ data, booth
   };
 
   const renderGenderChart = () => {
-    console.log('BoothAnalyticsCharts: renderGenderChart called, data.gender:', data.gender);
-    if (!data.gender) {
+    const genderData = findDataByType('gender');
+    console.log('BoothAnalyticsCharts: renderGenderChart called, genderData:', genderData);
+    if (!genderData) {
       console.log('BoothAnalyticsCharts: renderGenderChart - no gender data, returning null');
       return null;
     }
     
-    const chartData = createChartData(data.gender, 'Gender Distribution');
+    const chartData = createChartData(genderData, 'Gender Distribution');
     if (!chartData) {
       console.log('BoothAnalyticsCharts: renderGenderChart - no chart data created, returning null');
       return null;
@@ -147,13 +157,14 @@ const BoothAnalyticsCharts: React.FC<BoothAnalyticsChartsProps> = ({ data, booth
   };
 
   const renderEducationChart = () => {
-    console.log('BoothAnalyticsCharts: renderEducationChart called, data.education:', data.education);
-    if (!data.education) {
+    const educationData = findDataByType('education');
+    console.log('BoothAnalyticsCharts: renderEducationChart called, educationData:', educationData);
+    if (!educationData) {
       console.log('BoothAnalyticsCharts: renderEducationChart - no education data, returning null');
       return null;
     }
     
-    const chartData = createChartData(data.education, 'Education Level');
+    const chartData = createChartData(educationData, 'Education Level');
     if (!chartData) {
       console.log('BoothAnalyticsCharts: renderEducationChart - no chart data created, returning null');
       return null;
@@ -171,13 +182,14 @@ const BoothAnalyticsCharts: React.FC<BoothAnalyticsChartsProps> = ({ data, booth
   };
 
   const renderOccupationChart = () => {
-    console.log('BoothAnalyticsCharts: renderOccupationChart called, data.occupation:', data.occupation);
-    if (!data.occupation) {
+    const occupationData = findDataByType('occupation');
+    console.log('BoothAnalyticsCharts: renderOccupationChart called, occupationData:', occupationData);
+    if (!occupationData) {
       console.log('BoothAnalyticsCharts: renderOccupationChart - no occupation data, returning null');
       return null;
     }
     
-    const chartData = createChartData(data.occupation, 'Occupation');
+    const chartData = createChartData(occupationData, 'Occupation');
     if (!chartData) {
       console.log('BoothAnalyticsCharts: renderOccupationChart - no chart data created, returning null');
       return null;
