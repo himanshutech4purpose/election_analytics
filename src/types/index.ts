@@ -28,9 +28,9 @@ export interface BoothLevelAnalytics {
   id: number;
   created_at: string;
   booth_number: number;
-  panchayat_name?: string;
+  panchayat?: string;
+  village?: string;
   json_data?: BoothAnalyticsData;
-  Main_Town?: string;
 }
 
 export interface BoothAnalyticsData {
@@ -40,8 +40,10 @@ export interface BoothAnalyticsData {
     gender?: { [key: string]: number };
     education?: { [key: string]: number };
     occupation?: { [key: string]: number };
+    family_size?: { [key: string]: number };
     pie_chart?: boolean;
     bar_chart?: boolean;
+    histogram?: boolean;
   }>;
 }
 
@@ -90,6 +92,101 @@ export interface DistrictAnalyticsData {
     political_preference?: { [key: string]: number };
     pie_chart?: boolean;
     bar_chart?: boolean;
+  }>;
+}
+
+export interface BlockLevelAnalytics {
+  id: number;
+  created_at: string;
+  block: string;
+  total_panchayats: number;
+  total_villages?: number;
+  total_booths?: number;
+  json_data?: BlockAnalyticsData;
+}
+
+export interface BlockAnalyticsData {
+  data: Array<{
+    caste?: { [key: string]: number };
+    gender?: { [key: string]: number };
+    age_group?: { [key: string]: number };
+    family_size?: { [key: string]: number };
+    age_histogram?: { [key: string]: number };
+    relationship?: { [key: string]: number };
+    priority?: { [key: string]: number };
+    event_type?: { [key: string]: number };
+    total_population?: number;
+    total_families?: number;
+    average_family_size?: number;
+    average_age?: number;
+    median_age?: number;
+    gender_ratio?: number;
+    pie_chart?: boolean;
+    bar_chart?: boolean;
+    histogram?: boolean;
+  }>;
+}
+
+export interface VillageLevelAnalytics {
+  id: number;
+  created_at: string;
+  village?: string;
+  panchayat?: string;
+  block?: string;
+  total_booths?: number;
+  json_data?: VillageAnalyticsData;
+}
+
+export interface VillageAnalyticsData {
+  data: Array<{
+    caste?: { [key: string]: number };
+    gender?: { [key: string]: number };
+    age_group?: { [key: string]: number };
+    family_size?: { [key: string]: number };
+    age_histogram?: { [key: string]: number };
+    relationship?: { [key: string]: number };
+    priority?: { [key: string]: number };
+    event_type?: { [key: string]: number };
+    total_population?: number;
+    total_families?: number;
+    average_family_size?: number;
+    average_age?: number;
+    median_age?: number;
+    gender_ratio?: number;
+    pie_chart?: boolean;
+    bar_chart?: boolean;
+    histogram?: boolean;
+  }>;
+}
+
+export interface PanchayatLevelAnalytics {
+  id: number;
+  created_at: string;
+  panchayat?: string;
+  block?: string;
+  total_booths?: number;
+  json_data?: PanchayatAnalyticsData;
+}
+
+export interface PanchayatAnalyticsData {
+  data: Array<{
+    caste?: { [key: string]: number };
+    gender?: { [key: string]: number };
+    age_group?: { [key: string]: number };
+    family_size?: { [key: string]: number };
+    age_histogram?: { [key: string]: number };
+    relationship?: { [key: string]: number };
+    priority?: { [key: string]: number };
+    event_type?: { [key: string]: number };
+    total_population?: number;
+    total_families?: number;
+    average_family_size?: number;
+    average_age?: number;
+    median_age?: number;
+    gender_ratio?: number;
+    pie_chart?: boolean;
+    bar_chart?: boolean;
+    histogram?: boolean;
   }>;
 }
 

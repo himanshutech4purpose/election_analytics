@@ -7,9 +7,10 @@ import {
   UsersIcon, 
   HomeIcon, 
   BuildingOfficeIcon,
-  GlobeAltIcon,
   UserIcon,
-  CogIcon
+  CogIcon,
+  HomeModernIcon,
+  BuildingStorefrontIcon
 } from '@heroicons/react/24/outline';
 import Layout from '../components/Layout';
 
@@ -60,18 +61,25 @@ export default function HomePage() {
       color: 'bg-purple-500 hover:bg-purple-600'
     },
     {
-      title: 'District Analytics',
-      description: 'District-wide voter intelligence and patterns',
-      href: '/analytics/district',
-      icon: BuildingOfficeIcon,
-      color: 'bg-orange-500 hover:bg-orange-600'
+      title: 'Village Analytics',
+      description: 'Village-level voter intelligence and patterns',
+      href: '/analytics/village',
+      icon: HomeModernIcon,
+      color: 'bg-teal-500 hover:bg-teal-600'
     },
     {
-      title: 'State Analytics',
-      description: 'State-wide voter demographics and insights',
-      href: '/analytics/state',
-      icon: GlobeAltIcon,
-      color: 'bg-indigo-500 hover:bg-indigo-600'
+      title: 'Panchayat Analytics',
+      description: 'Panchayat-level voter demographics and insights',
+      href: '/analytics/panchayat',
+      icon: BuildingStorefrontIcon,
+      color: 'bg-cyan-500 hover:bg-cyan-600'
+    },
+    {
+      title: 'Block Analytics',
+      description: 'Block-level voter intelligence and comprehensive data',
+      href: '/analytics/block',
+      icon: BuildingOfficeIcon,
+      color: 'bg-orange-500 hover:bg-orange-600'
     }
   ];
 
@@ -133,8 +141,8 @@ export default function HomePage() {
             <div className="text-sm text-gray-600">Voter Records</div>
           </div>
           <div className="bg-white rounded-lg shadow p-6 text-center">
-            <div className="text-2xl font-bold text-orange-600">8</div>
-            <div className="text-sm text-gray-600">Districts</div>
+            <div className="text-2xl font-bold text-orange-600">12</div>
+            <div className="text-sm text-gray-600">Blocks</div>
           </div>
         </div>
 
@@ -198,7 +206,7 @@ export default function HomePage() {
           <div className="space-y-3">
             <div className="flex items-center space-x-3 text-sm text-gray-600">
               <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span>New booth data added for District 3</span>
+              <span>New booth data added for Block 3</span>
               <span className="text-gray-400">2 hours ago</span>
             </div>
             <div className="flex items-center space-x-3 text-sm text-gray-600">
@@ -208,7 +216,7 @@ export default function HomePage() {
             </div>
             <div className="flex items-center space-x-3 text-sm text-gray-600">
               <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-              <span>Analytics report generated</span>
+              <span>Village analytics report generated</span>
               <span className="text-gray-400">1 day ago</span>
             </div>
           </div>

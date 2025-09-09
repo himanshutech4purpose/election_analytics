@@ -12,7 +12,9 @@ import {
   XMarkIcon,
   MapIcon,
   BuildingOfficeIcon,
-  GlobeAltIcon
+  GlobeAltIcon,
+  HomeModernIcon,
+  BuildingStorefrontIcon
 } from '@heroicons/react/24/outline';
 
 interface LayoutProps {
@@ -23,14 +25,17 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard/booth', icon: HomeIcon },
   { name: 'Key People', href: '/key-people', icon: UsersIcon },
   { name: 'Booth Analytics', href: '/analytics/booth', icon: ChartBarIcon },
-  { name: 'District Analytics', href: '/analytics/district', icon: BuildingOfficeIcon },
-  { name: 'State Analytics', href: '/analytics/state', icon: GlobeAltIcon },
-  { name: 'Settings', href: '/settings', icon: CogIcon },
+  { name: 'Village Analytics', href: '/analytics/village', icon: HomeModernIcon },
+  { name: 'Panchayat Analytics', href: '/analytics/panchayat', icon: BuildingStorefrontIcon },
+  { name: 'Block Analytics', href: '/analytics/block', icon: BuildingOfficeIcon },
+  // { name: 'District Analytics', href: '/analytics/district', icon: MapIcon },
+  // { name: 'State Analytics', href: '/analytics/state', icon: GlobeAltIcon },
+  // { name: 'Settings', href: '/settings', icon: CogIcon },
 ];
 
 const adminNavigation = [
-  { name: 'User Management', href: '/admin/users', icon: UserIcon },
-  { name: 'System Settings', href: '/admin/settings', icon: CogIcon },
+  // { name: 'User Management', href: '/admin/users', icon: UserIcon },
+  // { name: 'System Settings', href: '/admin/settings', icon: CogIcon },
 ];
 
 export default function Layout({ children }: LayoutProps) {
