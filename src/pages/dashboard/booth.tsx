@@ -183,7 +183,7 @@ const BoothDashboardPage = () => {
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Active Locations</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {boothData.filter(b => b.panchayat_name || b.Main_Town).length}
+                      {boothData.filter(b => b.panchayat || b.village).length}
                     </p>
                   </div>
                 </div>
@@ -294,7 +294,7 @@ const BoothDashboardPage = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-gray-900">
-                              {booth.panchayat_name || booth.Main_Town || 'N/A'}
+                              {booth.panchayat || booth.village || 'N/A'}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">

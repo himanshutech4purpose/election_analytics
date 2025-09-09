@@ -33,7 +33,11 @@ const navigation = [
   // { name: 'Settings', href: '/settings', icon: CogIcon },
 ];
 
-const adminNavigation = [
+const adminNavigation: Array<{
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+}> = [
   // { name: 'User Management', href: '/admin/users', icon: UserIcon },
   // { name: 'System Settings', href: '/admin/settings', icon: CogIcon },
 ];
